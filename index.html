@@ -86,6 +86,77 @@
       padding: 0;
       line-height: 1;
     }
+
+    .color-tab {
+      padding: 6px 12px;
+      border-radius: 8px;
+      margin-right: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+      border: 1px solid transparent;
+      transition: background-color 0.2s ease, border 0.2s ease;
+    }
+  
+    .color-tab.active {
+      border: 1px solid rgba(0,0,0,0.2);
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  
+    .green { background-color: rgba(40, 167, 69, 0.15); }
+    .blue { background-color: rgba(0, 123, 255, 0.15); }
+    .red { background-color: rgba(220, 53, 69, 0.15); }
+    .yellow { background-color: rgba(255, 193, 7, 0.15); }
+    .purple { background-color: rgba(111, 66, 193, 0.15); }
+  
+    .color-tab:hover {
+      filter: brightness(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .tabs {
+        flex-wrap: wrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+    
+      .tab {
+        flex: 1 0 auto;
+        min-width: 120px;
+        text-align: center;
+      }
+    
+      .card {
+        flex-direction: column;
+        align-items: center;
+      }
+    
+      .card img {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        margin: 0 0 10px 0;
+      }
+    
+      .card-info {
+        width: 100%;
+      }
+    
+      .form input,
+      .form textarea {
+        font-size: 16px;
+        padding: 10px;
+      }
+    
+      .form {
+        padding: 15px;
+      }
+    
+      body {
+        padding: 10px;
+      }
+    }
+    
   </style>
 </head>
 <body>
@@ -115,6 +186,14 @@
 
   <!-- 유루캠 카드 리스트 탭 -->
   <div id="tab-yurucamp" class="tab-content">
+    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
+      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
+      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
+      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
+      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
+      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
+      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
+    </div>
     <div id="card-list"></div>
   </div>
 
@@ -126,11 +205,22 @@
     function switchTab(tabName) {
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
+    
       document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
       document.getElementById(`tab-${tabName}`).classList.add('active');
+    
+      if (tabName === 'yurucamp') {
+        filterByColor(''); // 전체 보기 초기화
+      }
+    }
 
-      if (tabName === 'yurucamp') loadCards('유루캠△ SEASON３');
+    let currentColorFilter = '';
+    
+    function filterByColor(color) {
+      currentColorFilter = color;
+      document.querySelectorAll('#color-tabs .color-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelector(`#color-tabs .color-tab[onclick="filterByColor('${color}')"]`).classList.add('active');
+      loadCards('유루캠△ SEASON３', color);
     }
 
     async function addCard() {
@@ -155,17 +245,34 @@
         document.querySelectorAll('.form input, .form textarea').forEach(el => el.value = '');
       }
     }
-
-    async function loadCards(title) {
-      const { data, error } = await supabase.from('cards').select('*').eq('title', title).order('id', { ascending: false });
+    function getColorStyle(color) {
+      switch (color) {
+        case '적': return 'color: red';
+        case '청': return 'color: blue';
+        case '녹': return 'color: green';
+        case '황': return 'color: goldenrod';
+        case '자': return 'color: purple';
+        default: return 'color: #2e7d32'; // 기본 녹색
+      }
+    }    
+    async function loadCards(title, color = '') {
+      let query = supabase.from('cards').select('*').eq('title', title);
+    
+      if (color) {
+        query = query.eq('color', color);
+      }
+    
+      const { data, error } = await query.order('id', { ascending: false });
       const container = document.getElementById('card-list');
       container.innerHTML = '';
+    
       data.forEach(card => {
+        const colorStyle = getColorStyle(card.color);
         container.innerHTML += `
           <div class="card">
             <img src="${card.image_url}" alt="${card.name}">
             <div class="card-info">
-              <h2>${card.name}</h2>
+              <h2 style="${colorStyle}">${card.name}</h2>
               <p><strong>레벨:</strong> ${card.level}</p>
               <p><strong>코스트:</strong> ${card.cost}</p>
               <p><strong>파워:</strong> ${card.power}</p>
