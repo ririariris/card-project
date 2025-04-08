@@ -164,6 +164,9 @@
   <div class="tabs">
     <div class="tab active" onclick="switchTab('add')">카드 추가</div>
     <div class="tab" onclick="switchTab('yurucamp')">유루캠△ SEASON３</div>
+    <div class="tab" onclick="switchTab('oshinoko')">【최애의 아이】Vol.2</div>
+    <div class="tab" onclick="switchTab('bangdream')">BanG Dream!</div>
+    <div class="tab" onclick="switchTab('girlbandcry')">ガールズバンドクライ</div>
   </div>
 
   <!-- 카드 추가 탭 -->
@@ -194,7 +197,46 @@
       <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
       <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
     </div>
-    <div id="card-list"></div>
+    <div id="card-list-yurucamp"></div>
+  </div>
+
+  <!-- 최애의 아이 카드 리스트 탭 -->
+  <div id="tab-oshinoko" class="tab-content">
+    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
+      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
+      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
+      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
+      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
+      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
+      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
+    </div>
+    <div id="card-list-oshinoko"></div>
+  </div>
+
+  <!-- 뱅드림 카드 리스트 탭 -->
+  <div id="tab-bangdream" class="tab-content">
+    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
+      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
+      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
+      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
+      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
+      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
+      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
+    </div>
+    <div id="card-list-bangdream"></div>
+  </div>
+
+  <!-- 걸밴크 카드 리스트 탭 -->
+  <div id="tab-girlbandcry" class="tab-content">
+    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
+      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
+      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
+      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
+      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
+      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
+      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
+    </div>
+    <div id="card-list-girlbandcry"></div>
   </div>
 
   <script>
@@ -202,25 +244,50 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcXVrZmxpZmhrZW9ydGl0c2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwMzQ5MDgsImV4cCI6MjA1OTYxMDkwOH0._Jyz4-oHTOMppPDQia_Kp3EwKbD20TdydE8ePCcMBrQ'; 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+    let currentTitle = '';     
+    let currentColorFilter = '';
+    let currentTab = '';
+
     function switchTab(tabName) {
+      currentTab = tabName;
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
     
-      document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`).classList.add('active');
-      document.getElementById(`tab-${tabName}`).classList.add('active');
+      document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`)?.classList.add('active');
+      document.getElementById(`tab-${tabName}`)?.classList.add('active');
     
       if (tabName === 'yurucamp') {
-        filterByColor(''); // 전체 보기 초기화
+        currentTitle = '유루캠△ SEASON３';
+      } else if (tabName === 'oshinoko') {
+        currentTitle = '【최애의 아이】Vol.2';
+      } else if (tabName === 'bangdream') {
+        currentTitle = 'BanG Dream!';
+      } else if (tabName === 'girlbandcry') {
+        currentTitle = 'ガールズバンドクライ';
       }
+    
+      console.log(`[탭 전환] tabName: ${tabName}, currentTitle: ${currentTitle}`);
+    
+      currentColorFilter = '';
+      document.querySelectorAll('#color-tabs .color-tab').forEach(tab => tab.classList.remove('active'));
+    
+      loadCards(currentTitle, currentColorFilter);
     }
-
-    let currentColorFilter = '';
+    
     
     function filterByColor(color) {
       currentColorFilter = color;
+    
+      // UI 갱신
       document.querySelectorAll('#color-tabs .color-tab').forEach(tab => tab.classList.remove('active'));
-      document.querySelector(`#color-tabs .color-tab[onclick="filterByColor('${color}')"]`).classList.add('active');
-      loadCards('유루캠△ SEASON３', color);
+      document.querySelector(`#color-tabs .color-tab[onclick="filterByColor('${color}')"]`)?.classList.add('active');
+    
+      // 현재 타이틀과 함께 필터링된 카드 다시 불러오기
+      if (currentTitle) {
+        loadCards(currentTitle, currentColorFilter);
+      } else {
+        console.warn('타이틀이 설정되지 않았습니다.');
+      }
     }
 
     async function addCard() {
@@ -256,14 +323,21 @@
       }
     }    
     async function loadCards(title, color = '') {
-      let query = supabase.from('cards').select('*').eq('title', title);
+      console.log(`[카드 로딩] title: ${title}, color: ${color}`);
     
-      if (color) {
-        query = query.eq('color', color);
-      }
+      let query = supabase.from('cards').select('*').eq('title', title);
+      if (color) query = query.eq('color', color);
     
       const { data, error } = await query.order('id', { ascending: false });
-      const container = document.getElementById('card-list');
+    
+      if (error) {
+        console.error('카드 로딩 에러:', error);
+        return;
+      }
+    
+      console.log(`[불러온 카드 수] ${data.length}장`);
+    
+      const container = document.getElementById(`card-list-${currentTab}`);
       container.innerHTML = '';
     
       data.forEach(card => {
@@ -288,6 +362,7 @@
         `;
       });
     }
+    
 
     async function deleteCard(id, btn) {
       if (!confirm("정말 이 카드를 삭제하시겠습니까?")) return;
