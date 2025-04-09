@@ -168,6 +168,7 @@
     <div class="tab" onclick="switchTab('bangdream')">BanG Dream!</div>
     <div class="tab" onclick="switchTab('girlbandcry')">걸즈밴드크라이</div>
     <div class="tab" onclick="switchTab('lycorisrecoil')">리코리스・리코일</div>
+    <div class="tab" onclick="switchTab('crayonsinchan')">크레용 신짱</div>
   </div>
 
   <!-- 카드 추가 탭 -->
@@ -253,6 +254,19 @@
     <div id="card-list-lycorisrecoil"></div>
   </div>
 
+  <!-- 신짱 카드 리스트 탭 -->
+  <div id="tab-crayonsinchan" class="tab-content">
+    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
+      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
+      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
+      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
+      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
+      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
+      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
+    </div>
+    <div id="card-list-crayonsinchan"></div>
+  </div>
+
   <script>
     const SUPABASE_URL = 'https://xjqukflifhkeortitsem.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcXVrZmxpZmhrZW9ydGl0c2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwMzQ5MDgsImV4cCI6MjA1OTYxMDkwOH0._Jyz4-oHTOMppPDQia_Kp3EwKbD20TdydE8ePCcMBrQ'; 
@@ -280,6 +294,8 @@
         currentTitle = '걸즈밴드크라이';
       } else if (tabName === 'lycorisrecoil') {
         currentTitle = '리코리스・리코일';
+      } else if (tabName === 'crayonsinchan') {
+        currentTitle = '크레용 신짱';
       }
     
       console.log(`[탭 전환] tabName: ${tabName}, currentTitle: ${currentTitle}`);
