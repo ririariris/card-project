@@ -162,14 +162,7 @@
 <body>
 
   <div class="tabs">
-    <div class="tab active" onclick="switchTab('add')">카드 추가</div>
-    <div class="tab" onclick="switchTab('yurucamp')">유루캠△ SEASON３</div>
-    <div class="tab" onclick="switchTab('oshinoko')">【최애의 아이】Vol.2</div>
-    <div class="tab" onclick="switchTab('bangdream')">BanG Dream!</div>
-    <div class="tab" onclick="switchTab('girlbandcry')">걸즈밴드크라이</div>
-    <div class="tab" onclick="switchTab('lycorisrecoil')">리코리스・리코일</div>
-    <div class="tab" onclick="switchTab('crayonsinchan')">크레용 신짱</div>
-    <div class="tab" onclick="switchTab('heavenburnsred')">헤븐 번즈 레드</div>
+    <div class="tab active" onclick="switchTab('add', '')">카드 추가</div>
   </div>
 
   <!-- 카드 추가 탭 -->
@@ -190,135 +183,65 @@
     </div>
   </div>
 
-  <!-- 유루캠 카드 리스트 탭 -->
-  <div id="tab-yurucamp" class="tab-content">
-    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
-      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
-      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
-      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
-      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
-      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
-      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
+  <template id="card-list-template">
+    <div class="tab-content">
+        <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
+            <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
+            <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
+            <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
+            <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
+            <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
+            <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
+        </div>
+        <div class="card-list"></div>
     </div>
-    <div id="card-list-yurucamp"></div>
-  </div>
-
-  <!-- 최애의 아이 카드 리스트 탭 -->
-  <div id="tab-oshinoko" class="tab-content">
-    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
-      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
-      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
-      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
-      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
-      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
-      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
-    </div>
-    <div id="card-list-oshinoko"></div>
-  </div>
-
-  <!-- 뱅드림 카드 리스트 탭 -->
-  <div id="tab-bangdream" class="tab-content">
-    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
-      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
-      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
-      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
-      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
-      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
-      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
-    </div>
-    <div id="card-list-bangdream"></div>
-  </div>
-
-  <!-- 걸밴크 카드 리스트 탭 -->
-  <div id="tab-girlbandcry" class="tab-content">
-    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
-      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
-      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
-      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
-      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
-      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
-      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
-    </div>
-    <div id="card-list-girlbandcry"></div>
-  </div>
-
-  <!-- 리코리코 카드 리스트 탭 -->
-  <div id="tab-lycorisrecoil" class="tab-content">
-    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
-      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
-      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
-      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
-      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
-      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
-      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
-    </div>
-    <div id="card-list-lycorisrecoil"></div>
-  </div>
-
-  <!-- 신짱 카드 리스트 탭 -->
-  <div id="tab-crayonsinchan" class="tab-content">
-    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
-      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
-      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
-      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
-      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
-      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
-      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
-    </div>
-    <div id="card-list-crayonsinchan"></div>
-  </div>
-
-  <!-- 헤번레 카드 리스트 탭 -->
-  <div id="tab-heavenburnsred" class="tab-content">
-    <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
-      <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
-      <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
-      <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
-      <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
-      <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
-      <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
-    </div>
-    <div id="card-list-heavenburnsred"></div>
-  </div>
+  </template>
 
   <script>
     const SUPABASE_URL = 'https://xjqukflifhkeortitsem.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcXVrZmxpZmhrZW9ydGl0c2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwMzQ5MDgsImV4cCI6MjA1OTYxMDkwOH0._Jyz4-oHTOMppPDQia_Kp3EwKbD20TdydE8ePCcMBrQ'; 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    let currentTitle = '';     
-    let currentColorFilter = '';
-    let currentTab = '';
+    const tabData = [
+      { id: 'yurucamp', title: '유루캠△ SEASON３' },
+      { id: 'oshinoko', title: '【최애의 아이】Vol.2' },
+      { id: 'bangdream', title: 'BanG Dream!' },
+      { id: 'girlbandcry', title: '걸즈밴드크라이' },
+      { id: 'lycorisrecoil', title: '리코리스・리코일' },
+      { id: 'crayonsinchan', title: '크레용 신짱' },
+      { id: 'heavenburnsred', title: '헤븐 번즈 레드' }
+    ];
 
-    function switchTab(tabName) {
+    const tabsContainer = document.querySelector('.tabs');
+    const template = document.getElementById('card-list-template');
+
+    tabData.forEach(tab => {
+      const tabButton = document.createElement('div');
+      tabButton.classList.add('tab');
+      tabButton.textContent = tab.title;
+      tabButton.onclick = () => switchTab(tab.id, tab.title);
+      tabsContainer.appendChild(tabButton);
+
+      const clone = template.content.cloneNode(true);
+      clone.querySelector('.tab-content').id = `tab-${tab.id}`;
+      clone.querySelector('.card-list').id = `card-list-${tab.id}`;
+      document.body.appendChild(clone);
+    });
+
+
+    function switchTab(tabName, title) {
       currentTab = tabName;
+      currentTitle = title;
+
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-    
-      document.querySelector(`.tab[onclick="switchTab('${tabName}')"]`)?.classList.add('active');
+
+      document.querySelector(`.tab[onclick="switchTab('${tabName}', '${title}')"]`)?.classList.add('active');
       document.getElementById(`tab-${tabName}`)?.classList.add('active');
-    
-      if (tabName === 'yurucamp') {
-        currentTitle = '유루캠△ SEASON３';
-      } else if (tabName === 'oshinoko') {
-        currentTitle = '【최애의 아이】Vol.2';
-      } else if (tabName === 'bangdream') {
-        currentTitle = 'BanG Dream!';
-      } else if (tabName === 'girlbandcry') {
-        currentTitle = '걸즈밴드크라이';
-      } else if (tabName === 'lycorisrecoil') {
-        currentTitle = '리코리스・리코일';
-      } else if (tabName === 'crayonsinchan') {
-        currentTitle = '크레용 신짱';
-      } else if (tabName === 'heavenburnsred') {
-        currentTitle = '헤븐 번즈 레드';
-      }
-    
-      console.log(`[탭 전환] tabName: ${tabName}, currentTitle: ${currentTitle}`);
-    
+
       currentColorFilter = '';
       document.querySelectorAll('#color-tabs .color-tab').forEach(tab => tab.classList.remove('active'));
-    
+
       loadCards(currentTitle, currentColorFilter);
     }
     
