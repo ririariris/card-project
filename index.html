@@ -202,32 +202,65 @@
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhqcXVrZmxpZmhrZW9ydGl0c2VtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwMzQ5MDgsImV4cCI6MjA1OTYxMDkwOH0._Jyz4-oHTOMppPDQia_Kp3EwKbD20TdydE8ePCcMBrQ'; 
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const tabData = [
-      { id: 'yurucamp', title: '유루캠△ SEASON３' },
-      { id: 'oshinoko', title: '【최애의 아이】Vol.2' },
-      { id: 'bangdream', title: 'BanG Dream!' },
-      { id: 'girlbandcry', title: '걸즈밴드크라이' },
-      { id: 'lycorisrecoil', title: '리코리스・리코일' },
-      { id: 'crayonsinchan', title: '크레용 신짱' },
-      { id: 'heavenburnsred', title: '헤븐 번즈 레드' }
-    ];
-
     const tabsContainer = document.querySelector('.tabs');
     const template = document.getElementById('card-list-template');
 
-    tabData.forEach(tab => {
-      const tabButton = document.createElement('div');
-      tabButton.classList.add('tab');
-      tabButton.textContent = tab.title;
-      tabButton.setAttribute('data-tab', tab.id); // data-tab 속성 추가
-      tabButton.onclick = () => switchTab(tab.id, tab.title);
-      tabsContainer.appendChild(tabButton);
-  
-      const clone = template.content.cloneNode(true);
-      clone.querySelector('.tab-content').id = `tab-${tab.id}`;
-      clone.querySelector('.card-list').id = `card-list-${tab.id}`;
-      document.body.appendChild(clone);
+    let allCards = []; // 모든 카드 데이터를 저장할 배열
+    let uniqueTitles = []; // 중복 제거된 타이틀을 저장할 배열
+
+    // title을 id로 변환하는 함수 (공백, 특수문자 제거)
+    function titleToId(title) {
+      return title.replace(/[^a-zA-Z0-9가-힣]/g, '');
+    }
+
+    // 중복 제거된 타이틀 배열 생성 함수
+    function createUniqueTitles(cards) {
+      const titles = cards.map(card => card.title);
+      uniqueTitles = [...new Set(titles)];
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initialize();
     });
+
+    async function initialize() {
+      try {
+          const { data, error } = await supabase.from('cards').select('*');
+          if (error) {
+              throw error;
+          }
+  
+          allCards = data; // 전체 카드 데이터 저장
+          createUniqueTitles(data); // 중복 제거된 타이틀 배열 생성
+          createTabs(); // 탭 생성
+  
+      } catch (error) {
+          console.error('Supabase 데이터 로딩 에러:', error);
+      }
+  }
+  
+    function createTabs() {
+      tabsContainer.innerHTML = '<div class="tab active" onclick="switchTab(\'add\', \'\')">카드 추가</div>'; // 기존 탭 초기화
+  
+      uniqueTitles.forEach(title => {
+          const tabButton = document.createElement('div');
+          tabButton.classList.add('tab');
+          tabButton.textContent = title;
+          tabButton.setAttribute('data-tab', titleToId(title));
+          tabButton.onclick = () => switchTab(titleToId(title), title);
+          tabsContainer.appendChild(tabButton);
+  
+          const clone = template.content.cloneNode(true);
+          clone.querySelector('.tab-content').id = `tab-${titleToId(title)}`;
+          clone.querySelector('.card-list').id = `card-list-${titleToId(title)}`;
+          document.body.appendChild(clone);
+      });
+  
+      // 초기 탭 선택 (첫 번째 탭 또는 카드 추가 탭)
+      if (uniqueTitles.length > 0) {
+          switchTab(titleToId(uniqueTitles[0]), uniqueTitles[0]);
+      }
+    }
 
     function switchTab(tabName, title) {
       currentTab = tabName;
@@ -239,9 +272,8 @@
       document.querySelector(`.tab[data-tab="${tabName}"]`)?.classList.add('active');
       document.getElementById(`tab-${tabName}`)?.classList.add('active');
   
-      loadCards(currentTitle, '');
-    }
-    
+      loadCards(title, '');
+   }
     
     function filterByColor(element) {
       const color = element.dataset.color;
@@ -275,6 +307,9 @@
       } else {
         alert('카드 저장 완료!');
         document.querySelectorAll('.form input, .form textarea').forEach(el => el.value = '');
+
+        // 카드 추가 후 탭 업데이트
+        initialize();
       }
     }
     function getColorStyle(color) {
@@ -289,42 +324,33 @@
     }    
     async function loadCards(title, color = '') {
       console.log(`[카드 로딩] title: ${title}, color: ${color}`);
-    
-      let query = supabase.from('cards').select('*').eq('title', title);
-      if (color) query = query.eq('color', color);
-    
-      const { data, error } = await query.order('id', { ascending: false });
-    
-      if (error) {
-        console.error('카드 로딩 에러:', error);
-        return;
-      }
-    
-      console.log(`[불러온 카드 수] ${data.length}장`);
-    
-      const container = document.getElementById(`card-list-${currentTab}`);
+  
+      const container = document.getElementById(`card-list-${titleToId(title)}`);
       container.innerHTML = '';
-    
-      data.forEach(card => {
-        const colorStyle = getColorStyle(card.color);
-        container.innerHTML += `
-          <div class="card">
-            <img src="${card.image_url}" alt="${card.name}">
-            <div class="card-info">
-              <h2 style="${colorStyle}">${card.name}</h2>
-              <p><strong>레벨:</strong> ${card.level}</p>
-              <p><strong>코스트:</strong> ${card.cost}</p>
-              <p><strong>파워:</strong> ${card.power}</p>
-              <p><strong>소울:</strong> ${card.soul}</p>
-              <p><strong>색상:</strong> ${card.color}</p>
-              <p><strong>특징:</strong> ${card.traits}</p>
-              <p><strong>효과:</strong></p>
-              <pre style="white-space: pre-wrap; margin: 0;">${card.effect}</pre>
-              <p><strong>타이틀:</strong> ${card.title}</p>
-            </div>
-            <button class="delete-button" onclick="deleteCard('${card.id}', this)">&#x2716;</button>
-          </div>
-        `;
+  
+      const filteredCards = allCards.filter(card => card.title === title);
+      const displayCards = color ? filteredCards.filter(card => card.color === color) : filteredCards;
+  
+      displayCards.forEach(card => {
+          const colorStyle = getColorStyle(card.color);
+          container.innerHTML += `
+              <div class="card">
+                  <img src="${card.image_url}" alt="${card.name.replace(/"/g, '&quot;') /* alt 속성 내 따옴표 처리 */ }">
+                  <div class="card-info">
+                      <h2 style="${colorStyle}">${card.name}</h2>
+                      <p><strong>레벨:</strong> ${card.level}</p>
+                      <p><strong>코스트:</strong> ${card.cost}</p>
+                      <p><strong>파워:</strong> ${card.power}</p>
+                      <p><strong>소울:</strong> ${card.soul}</p>
+                      <p><strong>색상:</strong> ${card.color}</p>
+                      <p><strong>특징:</strong> ${card.traits}</p>
+                      <p><strong>효과:</strong></p>
+                      <pre style="white-space: pre-wrap; margin: 0;">${card.effect}</pre>
+                      <p><strong>타이틀:</strong> ${card.title}</p>
+                  </div>
+                  <button class="delete-button" onclick="deleteCard('${card.id}', this)">&#x2716;</button>
+              </div>
+          `;
       });
     }
     
@@ -337,6 +363,9 @@
       } else {
         const cardElement = btn.closest('.card');
         if (cardElement) cardElement.remove();
+
+        // 카드 삭제 후 탭 업데이트
+        initialize();
       }
     }
   </script>
