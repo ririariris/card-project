@@ -185,13 +185,13 @@
 
   <template id="card-list-template">
     <div class="tab-content">
-        <div class="tabs" id="color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
-            <div class="tab color-tab active" onclick="filterByColor('')">전체</div>
-            <div class="tab color-tab green" onclick="filterByColor('녹')">녹색</div>
-            <div class="tab color-tab blue" onclick="filterByColor('청')">청색</div>
-            <div class="tab color-tab red" onclick="filterByColor('적')">적색</div>
-            <div class="tab color-tab yellow" onclick="filterByColor('황')">황색</div>
-            <div class="tab color-tab purple" onclick="filterByColor('자')">자색</div>
+        <div class="tabs color-tabs" style="margin-top: -10px; margin-bottom: 10px;">
+            <div class="tab color-tab active" data-color="" onclick="filterByColor(this)">전체</div>
+            <div class="tab color-tab green" data-color="녹" onclick="filterByColor(this)">녹색</div>
+            <div class="tab color-tab blue" data-color="청" onclick="filterByColor(this)">청색</div>
+            <div class="tab color-tab red" data-color="적" onclick="filterByColor(this)">적색</div>
+            <div class="tab color-tab yellow" data-color="황" onclick="filterByColor(this)">황색</div>
+            <div class="tab color-tab purple" data-color="자" onclick="filterByColor(this)">자색</div>
         </div>
         <div class="card-list"></div>
     </div>
@@ -219,46 +219,40 @@
       const tabButton = document.createElement('div');
       tabButton.classList.add('tab');
       tabButton.textContent = tab.title;
+      tabButton.setAttribute('data-tab', tab.id); // data-tab 속성 추가
       tabButton.onclick = () => switchTab(tab.id, tab.title);
       tabsContainer.appendChild(tabButton);
-
+  
       const clone = template.content.cloneNode(true);
       clone.querySelector('.tab-content').id = `tab-${tab.id}`;
       clone.querySelector('.card-list').id = `card-list-${tab.id}`;
       document.body.appendChild(clone);
     });
 
-
     function switchTab(tabName, title) {
       currentTab = tabName;
       currentTitle = title;
-
+  
       document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-
-      document.querySelector(`.tab[onclick="switchTab('${tabName}', '${title}')"]`)?.classList.add('active');
+  
+      document.querySelector(`.tab[data-tab="${tabName}"]`)?.classList.add('active');
       document.getElementById(`tab-${tabName}`)?.classList.add('active');
-
-      currentColorFilter = '';
-      document.querySelectorAll('#color-tabs .color-tab').forEach(tab => tab.classList.remove('active'));
-
-      loadCards(currentTitle, currentColorFilter);
+  
+      loadCards(currentTitle, '');
     }
     
     
-    function filterByColor(color) {
+    function filterByColor(element) {
+      const color = element.dataset.color;
       currentColorFilter = color;
-    
-      // UI 갱신
-      document.querySelectorAll('#color-tabs .color-tab').forEach(tab => tab.classList.remove('active'));
-      document.querySelector(`#color-tabs .color-tab[onclick="filterByColor('${color}')"]`)?.classList.add('active');
-    
-      // 현재 타이틀과 함께 필터링된 카드 다시 불러오기
-      if (currentTitle) {
-        loadCards(currentTitle, currentColorFilter);
-      } else {
-        console.warn('타이틀이 설정되지 않았습니다.');
-      }
+      currentTab = element.closest('.tab-content').id.replace('tab-', '');
+
+      const colorTabs = element.parentElement.querySelectorAll('.color-tab');
+      colorTabs.forEach(tab => tab.classList.remove('active'));
+      element.classList.add('active');
+
+      loadCards(currentTitle, color);
     }
 
     async function addCard() {
