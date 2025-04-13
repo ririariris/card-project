@@ -649,9 +649,7 @@
     // 이벤트 리스너 설정 (1회만 설정되도록 수정)
     if (!modalClickListener) {
       modalClickListener = (event) => {
-        if (isModalOpen && !event.target.closest('.card-info-modal')) {
-          closeCardInfoModal();
-        }
+        closeCardInfoModal();
       };
       document.addEventListener('mousedown', modalClickListener);
     }
