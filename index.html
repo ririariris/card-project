@@ -10,282 +10,318 @@
       padding: 20px;
       background-color: #f9f9f9;
     }
+
     .tabs {
-      display: flex;
-      margin-bottom: 20px;
+        display: flex;
+        margin-bottom: 20px;
     }
+
     .tab {
-      padding: 10px 20px;
-      margin-right: 10px;
-      background-color: #ddd;
-      cursor: pointer;
-      border-radius: 5px 5px 0 0;
+        padding: 10px 20px;
+        margin-right: 10px;
+        background-color: #ddd;
+        cursor: pointer;
+        border-radius: 5px 5px 0 0;
     }
+
     .tab.active {
-      background-color: #fff;
-      font-weight: bold;
-      border-bottom: 2px solid white;
+        background-color: #fff;
+        font-weight: bold;
+        border-bottom: 2px solid white;
     }
+
     .tab-content {
-      display: none;
+        display: none;
     }
+
     .tab-content.active {
-      display: block;
+        display: block;
     }
+
     .form {
-      background: #fff;
-      padding: 20px;
-      margin-bottom: 30px;
-      border-radius: 10px;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 30px;
+        border-radius: 10px;
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
     }
-    .form input, .form textarea {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+
+    .form input,
+    .form textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
     }
+
     .card {
-      position: relative;
-      display: flex;
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 20px;
-      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+        position: relative;
+        display: flex;
+        background: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
     }
+
     .card img {
-      width: 200px;
-      border-radius: 8px;
-      margin-right: 20px;
+        width: 200px;
+        border-radius: 8px;
+        margin-right: 20px;
     }
+
     .card-info {
-      flex: 1;
+        flex: 1;
     }
+
     .card-info h2 {
-      margin-top: 0;
-      color: #2e7d32;
+        margin-top: 0;
+        color: #2e7d32;
     }
+
     .card-info p {
-      margin: 4px 0;
+        margin: 4px 0;
     }
+
     .delete-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: red;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 24px;
-      height: 24px;
-      font-size: 16px;
-      cursor: pointer;
-      padding: 0;
-      line-height: 1;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: red;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        font-size: 16px;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
     }
 
     .color-tab {
-      padding: 6px 12px;
-      border-radius: 8px;
-      margin-right: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 14px;
-      border: 1px solid transparent;
-      transition: background-color 0.2s ease, border 0.2s ease;
+        padding: 6px 12px;
+        border-radius: 8px;
+        margin-right: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        font-size: 14px;
+        border: 1px solid transparent;
+        transition: background-color 0.2s ease,
+            border 0.2s ease;
     }
-  
+
     .color-tab.active {
-      border: 1px solid rgba(0,0,0,0.2);
-      background-color: rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0,0,0,0.2);
+        background-color: rgba(0, 0, 0, 0.05);
     }
-  
-    .green { background-color: rgba(40, 167, 69, 0.15); }
-    .blue { background-color: rgba(0, 123, 255, 0.15); }
-    .red { background-color: rgba(220, 53, 69, 0.15); }
-    .yellow { background-color: rgba(255, 193, 7, 0.15); }
-    .purple { background-color: rgba(111, 66, 193, 0.15); }
-  
+
+    .green {
+        background-color: rgba(40, 167, 69, 0.15);
+    }
+
+    .blue {
+        background-color: rgba(0, 123, 255, 0.15);
+    }
+
+    .red {
+        background-color: rgba(220, 53, 69, 0.15);
+    }
+
+    .yellow {
+        background-color: rgba(255, 193, 7, 0.15);
+    }
+
+    .purple {
+        background-color: rgba(111, 66, 193, 0.15);
+    }
+
     .color-tab:hover {
-      filter: brightness(1.1);
+        filter: brightness(1.1);
     }
 
     .card-image-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
     }
+
     .card-image {
-      width: 150px;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      cursor: pointer;
-      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+        width: 150px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
     }
+
     .card-info-modal {
-      display: none;        /* 초기 상태 숨김 */
-      flex-direction: column; /* 세로 방향으로 기본 배치 */
-      align-items: center;    /* 가로축 가운데 정렬 */
-      position: fixed;
+      display: none;
+      flex-direction: column !important; /* 세로 방향으로 기본 배치 */
+      align-items: flex-start !important; /* 기본 정렬 (좌측 상단) */
+      position: fixed !important;
       top: 50%;
       left: 50%;
-      transform: translate(-50%, -50%); /* 화면 중앙에 위치 */
+      transform: translate(-50%, -50%) !important; /* 중앙 정렬 유지 */
       background: white;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
       z-index: 1000;
-      width: 80%;           /* 모달 너비 */
-      max-width: 600px;    /* 최대 너비 */
+      width: 80%;
+      max-width: 600px;
       height: auto;
-      max-height: 80%;    /* 최대 높이 */
-      overflow: auto;      /* 내용이 넘치면 스크롤 */
+      max-height: 80%;
+      overflow: auto;
     }
-  
+
     /* 추가: 모달이 활성화되었을 때 표시하기 위한 스타일 */
     .card-info-modal.active {
-        display: flex;       /* 변경: Flexbox로 표시 (기존 display: block; 대신) */
-        flex-direction: column; /* 재확인: 세로 방향으로 배치 */
-        align-items: center;    /* 재확인: 가로축 가운데 정렬 */
-        justify-content: flex-start; /* 새로 추가: 세로축 시작점에 정렬 */
+        display: flex;
+        /* 변경: Flexbox로 표시 (기존 display: block; 대신) */
+        flex-direction: row;
+        /* 변경: 가로로 표시 */
+        align-items: flex-start;
+        /* 재확인: 세로 정렬 */
+        justify-content: flex-start;
+        /*재확인: 가로 정렬 */
     }
 
     .modal-content {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start; /* 기존 스타일: 위쪽 정렬 */
-      justify-content: flex-start; /* 기존 스타일: 왼쪽부터 정렬 */
-      align-items: center;    /* 변경: 세로 방향 중앙 정렬 */
+      display: flex !important; /* 명시적으로 Flexbox 사용 */
+      flex-direction: row !important; /* 가로 방향 배치 */
+      align-items: flex-start !important; /* 세로 방향 정렬 (위쪽 기준) */
+      justify-content: flex-start !important; /* 가로 방향 정렬 (왼쪽부터) */
       width: 100%;
       height: auto;
       overflow: auto;
     }
 
     #modal-info {
-      flex: 1;           /* 추가: 남은 공간 차지 */
-      display: flex;       /* 추가: Flexbox 내부 요소 정렬 */
-      flex-direction: column; /* 추가: 세로 방향 정렬 */
-      align-items: flex-start; /* 추가: 가로축 왼쪽 정렬 */
-      justify-content: flex-start; /* 추가: 세로축 위쪽 정렬 */
-    }
-  
-    #modal-info pre {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
+      flex: 1;
+      display: flex !important; /* 명시적으로 Flexbox 사용 */
+      flex-direction: column !important; /* 세로 방향 정렬 */
+      align-items: flex-start !important; /* 가로 방향 정렬 (왼쪽부터) */
+      justify-content: flex-start !important; /* 세로 방향 정렬 (위쪽부터) */
     }
 
-    .card-info-modal.active {
-      display: block;
+    #modal-info pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     .card-info-modal img {
       width: auto;
-      max-width: 40%;  /* 카드 이미지 최대 너비 */
+      max-width: 40%;      /* 이미지 최대 너비를 50%로 제한 */
       height: auto;
-      max-height: 100%;
-      margin-right: 15px; /* 정보와의 간격 */
-      object-fit: contain; /* 이미지 비율 유지 */
-      flex-shrink: 0;   /* 이미지 축소 안 함 */
+      max-height: 80%;     /* 이미지 최대 높이를 80%로 제한 */
+      margin-right: 15px;   /* 정보와의 간격 유지 */
+      object-fit: contain;  /* 이미지 비율 유지 */
+      flex-shrink: 0;       /* 이미지가 줄어들지 않도록 설정 */
+      align-self: center;
     }
 
     .card-info-modal .close-button {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      cursor: pointer;
-      font-size: 20px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        font-size: 20px;
     }
 
-    @media (max-width: 768px){
-      .tabs {
-        flex-wrap: wrap;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-    
-      .tab {
-        flex: 1 0 auto;
-        min-width: 120px;
-        text-align: center;
-      }
-    
-      .card {
-        flex-direction: column;
-        align-items: center;
-      }
-    
-      .card img {
-        width: 100%;
-        max-width: 300px;
-        height: auto;
-        margin: 0 0 10px 0;
-      }
-    
-      .card-info {
-        width: 100%;
-      }
-    
-      .form input,
-      .form textarea {
-        font-size: 16px;
-        padding: 10px;
-      }
-    
-      .form {
-        padding: 15px;
-      }
-    
-      .card-info-modal {
-        width: 90%; /* 모바일에서 90% */
-        max-width: none; /* 모바일에서 max-width 제거 */
-        top: 0; /* 모바일에서 왼쪽 위 */
-        left: 0; /* 모바일에서 왼쪽 위 */
-        transform: none; /* 모바일에서 transform 제거 */
-        flex-direction: column;
-        align-items: center;
-        padding: 10px;
-        height: auto; /* 내용에 따라 */
-      }
+    /* 모바일 환경 */
+    @media (max-width: 768px) {
+        .tabs {
+            flex-wrap: wrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
 
+        .tab {
+            flex: 1 0 auto;
+            min-width: 120px;
+            text-align: center;
+        }
 
-      .modal-content {
-        flex-direction: column; /* 모바일에서 세로로 쌓기 */
-        align-items: center;    /* 모바일에서 이미지 가운데 정렬 */
-      }
+        .card {
+            flex-direction: column;
+            align-items: center;
+        }
 
-      .card-info-modal img {
-        max-width: 80%; /* 모바일에서는 이미지 너비 확대 */
-        margin-right: 0;
-        margin-bottom: 10px;
-      }
+        .card img {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            margin: 0 0 10px 0;
+        }
 
-      .card-info-modal h2 {
-          font-size: 1.8em; /* 폰트 크기 증가 */
-      }
+        .card-info {
+            width: 100%;
+        }
 
-      .card-info-modal p,
-      .card-info-modal pre {
-          font-size: 1.1em; /* 폰트 크기 증가 */
-      }
+        .form input,
+        .form textarea {
+            font-size: 16px;
+            padding: 10px;
+        }
 
-      body {
-        padding: 0;
-      }
-      
+        .form {
+            padding: 15px;
+        }
+
+        .card-info-modal {
+          width: 90%;       /* 모바일에서 90% */
+          max-width: none;  /* 모바일에서 max-width 제거 */
+          top: 0;           /* 모바일에서 왼쪽 위 */
+          left: 0;          /* 모바일에서 왼쪽 위 */
+          transform: none;  /* 모바일에서 transform 제거 */
+          flex-direction: column;
+          align-items: center;
+          padding: 10px;
+          height: auto;     /* 내용에 따라 */
+        }
+
+        .modal-content {
+            flex-direction: column;
+            /* 모바일에서 세로로 쌓기 */
+            align-items: center;
+            /* 모바일에서 이미지 가운데 정렬 */
+        }
+
+        .card-info-modal img {
+            max-width: 80%;
+            /* 모바일에서는 이미지 너비 확대 */
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+
+        .card-info-modal h2 {
+            font-size: 1.8em;
+            /* 폰트 크기 증가 */
+        }
+
+        .card-info-modal p,
+        .card-info-modal pre {
+            font-size: 1.1em;
+            /* 폰트 크기 증가 */
+        }
+
+        body {
+            padding: 0;
+        }
     }
+
     :root {
-      --color-red: red;
-      --color-blue: blue;
-      --color-green: green;
-      --color-yellow: goldenrod;
-      --color-purple: purple;
-      --color-default: #2e7d32; /* 기본 녹색 */
-    } 
+        --color-red: red;
+        --color-blue: blue;
+        --color-green: green;
+        --color-yellow: goldenrod;
+        --color-purple: purple;
+        --color-default: #2e7d32;
+    }
   </style>
 </head>
 <body>
