@@ -113,6 +113,63 @@
       filter: brightness(1.1);
     }
 
+    .card-image-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .card-image {
+      width: 150px;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    .card-info-modal {
+      display: none;
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      width: 80%;
+      max-width: 600px;
+      overflow: auto;
+    }
+
+    #modal-info {
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+  
+    #modal-info pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+
+    .card-info-modal.active {
+      display: block;
+    }
+    .card-info-modal img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      margin-bottom: 10px;
+    }
+    .card-info-modal .close-button {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      font-size: 20px;
+    }
+
     @media (max-width: 768px) {
       .tabs {
         flex-wrap: wrap;
@@ -156,7 +213,14 @@
         padding: 10px;
       }
     }
-    
+    :root {
+      --color-red: red;
+      --color-blue: blue;
+      --color-green: green;
+      --color-yellow: goldenrod;
+      --color-purple: purple;
+      --color-default: #2e7d32; /* 기본 녹색 */
+    } 
   </style>
 </head>
 <body>
@@ -193,9 +257,17 @@
             <div class="tab color-tab yellow" data-color="황" onclick="filterByColor(this)">황색</div>
             <div class="tab color-tab purple" data-color="자" onclick="filterByColor(this)">자색</div>
         </div>
-        <div class="card-list"></div>
+        <div id="card-list">
+            <div class="card-image-list"></div>
+        </div>
     </div>
   </template>
+
+  <div class="card-info-modal">
+      <span class="close-button" onclick="closeCardInfoModal()">&times;</span>
+      <img id="modal-image" src="" alt="">
+      <div id="modal-info"></div>
+  </div>
 
   <script>
     const SUPABASE_URL = 'https://xjqukflifhkeortitsem.supabase.co';
@@ -210,7 +282,8 @@
 
     // title을 id로 변환하는 함수 (공백, 특수문자 제거)
     function titleToId(title) {
-      return title.replace(/[^a-zA-Z0-9가-힣]/g, '');
+      const id = title.replace(/ /g, ''); // 공백만 제거
+      return id;
     }
 
     // 중복 제거된 타이틀 배열 생성 함수
@@ -239,41 +312,53 @@
       }
   }
   
-    function createTabs() {
-      tabsContainer.innerHTML = '<div class="tab active" onclick="switchTab(\'add\', \'\')">카드 추가</div>'; // 기존 탭 초기화
-  
-      uniqueTitles.forEach(title => {
-          const tabButton = document.createElement('div');
-          tabButton.classList.add('tab');
-          tabButton.textContent = title;
-          tabButton.setAttribute('data-tab', titleToId(title));
-          tabButton.onclick = () => switchTab(titleToId(title), title);
-          tabsContainer.appendChild(tabButton);
-  
-          const clone = template.content.cloneNode(true);
-          clone.querySelector('.tab-content').id = `tab-${titleToId(title)}`;
-          clone.querySelector('.card-list').id = `card-list-${titleToId(title)}`;
-          document.body.appendChild(clone);
-      });
-  
-      // 초기 탭 선택 (첫 번째 탭 또는 카드 추가 탭)
-      if (uniqueTitles.length > 0) {
-          switchTab(titleToId(uniqueTitles[0]), uniqueTitles[0]);
-      }
-    }
+  function createTabs() {
+    tabsContainer.innerHTML = '<div class="tab active" onclick="switchTab(\'add\', \'\')">카드 추가</div>';
 
-    function switchTab(tabName, title) {
-      currentTab = tabName;
-      currentTitle = title;
-  
-      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-  
-      document.querySelector(`.tab[data-tab="${tabName}"]`)?.classList.add('active');
-      document.getElementById(`tab-${tabName}`)?.classList.add('active');
-  
-      loadCards(title, '');
-   }
+    uniqueTitles.forEach(title => {
+        const tabButton = document.createElement('div');
+        tabButton.classList.add('tab');
+        tabButton.textContent = title;
+        tabButton.setAttribute('data-tab', titleToId(title));
+        tabButton.onclick = () => switchTab(titleToId(title), title);
+        tabsContainer.appendChild(tabButton);
+
+        const clone = template.content.cloneNode(true);
+        const tabContent = clone.querySelector('.tab-content');
+        if (!tabContent) return;
+
+        tabContent.id = `tab-${titleToId(title)}`;
+
+        // 이 부분이 핵심! card-list를 여기서 정확히 어떻게 만드나요?
+        const cardList = document.createElement('div');
+        cardList.id = `card-list-${titleToId(title)}`;
+        const cardImageList = document.createElement('div');
+        cardImageList.className = 'card-image-list';
+        cardList.appendChild(cardImageList);
+        tabContent.appendChild(cardList);
+
+        document.body.appendChild(clone);
+    });
+
+    if (uniqueTitles.length > 0) {
+        switchTab(titleToId(uniqueTitles[0]), uniqueTitles[0]);
+    }
+  }
+
+
+  function switchTab(tabName, title) {
+    currentTab = tabName;
+    currentTitle = title;
+
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+    document.querySelector(`.tab[data-tab="${tabName}"]`)?.classList.add('active');
+    document.getElementById(`tab-${tabName}`)?.classList.add('active');
+
+    const targetId = titleToId(title);
+    loadCards(title, '');
+  }
     
     function filterByColor(element) {
       const color = element.dataset.color;
@@ -312,48 +397,95 @@
         initialize();
       }
     }
-    function getColorStyle(color) {
+    function getColorVariable(color) {
       switch (color) {
-        case '적': return 'color: red';
-        case '청': return 'color: blue';
-        case '녹': return 'color: green';
-        case '황': return 'color: goldenrod';
-        case '자': return 'color: purple';
-        default: return 'color: #2e7d32'; // 기본 녹색
+          case '적':
+              return 'var(--color-red)';
+          case '청':
+              return 'var(--color-blue)';
+          case '녹':
+              return 'var(--color-green)';
+          case '황':
+              return 'var(--color-yellow)';
+          case '자':
+              return 'var(--color-purple)';
+          default:
+              return 'var(--color-default)';
       }
-    }    
-    async function loadCards(title, color = '') {
-      console.log(`[카드 로딩] title: ${title}, color: ${color}`);
-  
-      const container = document.getElementById(`card-list-${titleToId(title)}`);
-      container.innerHTML = '';
-  
-      const filteredCards = allCards.filter(card => card.title === title);
-      const displayCards = color ? filteredCards.filter(card => card.color === color) : filteredCards;
-  
-      displayCards.forEach(card => {
-          const colorStyle = getColorStyle(card.color);
-          container.innerHTML += `
-              <div class="card">
-                  <img src="${card.image_url}" alt="${card.name.replace(/"/g, '&quot;') /* alt 속성 내 따옴표 처리 */ }">
-                  <div class="card-info">
-                      <h2 style="${colorStyle}">${card.name}</h2>
-                      <p><strong>레벨:</strong> ${card.level}</p>
-                      <p><strong>코스트:</strong> ${card.cost}</p>
-                      <p><strong>파워:</strong> ${card.power}</p>
-                      <p><strong>소울:</strong> ${card.soul}</p>
-                      <p><strong>색상:</strong> ${card.color}</p>
-                      <p><strong>특징:</strong> ${card.traits}</p>
-                      <p><strong>효과:</strong></p>
-                      <pre style="white-space: pre-wrap; margin: 0;">${card.effect}</pre>
-                      <p><strong>타이틀:</strong> ${card.title}</p>
-                  </div>
-                  <button class="delete-button" onclick="deleteCard('${card.id}', this)">&#x2716;</button>
-              </div>
-          `;
-      });
+  }    
+  async function loadCards(title, color = '') {
+    const cardListContainer = document.getElementById(`card-list-${titleToId(title)}`);
+    if (!cardListContainer) {
+        console.log('cardListContainer 없음');
+        return;
     }
+
+    const container = cardListContainer.querySelector('.card-image-list');
+    if (!container) {
+        console.log('container 없음');
+        return;
+    }
+
+    container.innerHTML = '';
+
+    const filteredCards = allCards.filter(card => card.title === title);
+    const displayCards = color ? filteredCards.filter(card => card.color === color) : filteredCards;
+
+    displayCards.forEach((card, index) => {
+        const img = document.createElement('img');
+        img.src = card.image_url;
+        img.alt = card.name;
+        img.className = 'card-image';
+        img.onclick = () => showCardInfoModal(card);
+
+        img.onload = function() {
+            try {
+                container.appendChild(img);
+                console.log(`[${index}] 이미지 로드 완료:`, img.src, 'container.innerHTML:', container.innerHTML);
+            } catch (error) {
+                console.error(`[${index}] 이미지 로드 완료 후 추가 실패:`, img.src, error);
+            }
+        };
+
+        img.onerror = function() {
+            console.error(`[${index}] 이미지 로드 실패:`, img.src);
+        };
+        
+        // **이미지 요소만 추가, 카드 이름은 모달 창에서 표시**
+        container.appendChild(img); 
+    });
+  }
+  
+  function showCardInfoModal(card) {
+    document.getElementById('modal-image').src = card.image_url;
+
+    // 카드 이름 색상 적용
+    const colorVariable = getColorVariable(card.color);
+    const nameElement = document.createElement('h2');
+    nameElement.textContent = card.name;
+    nameElement.style.color = colorVariable;
+
+    document.getElementById('modal-info').innerHTML = ''; // 기존 내용 초기화
+    document.getElementById('modal-info').appendChild(nameElement);
+
+    // 나머지 카드 정보 표시
+    document.getElementById('modal-info').innerHTML += `
+        <p><strong>레벨:</strong> ${card.level}</p>
+        <p><strong>코스트:</strong> ${card.cost}</p>
+        <p><strong>파워:</strong> ${card.power}</p>
+        <p><strong>소울:</strong> ${card.soul}</p>
+        <p><strong>색상:</strong> ${card.color}</p>
+        <p><strong>특징:</strong> ${card.traits}</p>
+        <p><strong>효과:</strong></p>
+        <pre>${card.effect}</pre>
+    `;
+
+    document.querySelector('.card-info-modal').classList.add('active');
+  }
     
+    function closeCardInfoModal() {
+      document.querySelector('.card-info-modal').classList.remove('active');
+    }
 
     async function deleteCard(id, btn) {
       if (!confirm("정말 이 카드를 삭제하시겠습니까?")) return;
