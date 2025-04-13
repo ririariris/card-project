@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>바이스 카드 리스트</title>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
@@ -273,16 +273,12 @@
         }
 
         .card-info-modal {
-          width: 90%;       /* 모바일에서 90% */
-          max-width: none;  /* 모바일에서 max-width 제거 */
-          top: 0;           /* 모바일에서 왼쪽 위 */
-          left: 0;          /* 모바일에서 왼쪽 위 */
-          transform: none;  /* 모바일에서 transform 제거 */
-          flex-direction: column;
-          align-items: center;
-          padding: 10px;
-          height: auto;     /* 내용에 따라 */
-        }
+          width: 80%;
+          max-width: none;
+          top: 20%;        
+          left: 50%;       
+          transform: none; 
+      }
 
         .modal-content {
             flex-direction: column;
@@ -292,7 +288,7 @@
         }
 
         .card-info-modal img {
-            max-width: 80%;
+            max-width: 40%;
             /* 모바일에서는 이미지 너비 확대 */
             margin-right: 0;
             margin-bottom: 10px;
