@@ -159,80 +159,93 @@
 
     .card-info-modal {
       display: none;
-      flex-direction: column !important; /* 세로 방향으로 기본 배치 */
-      align-items: flex-start !important; /* 기본 정렬 (좌측 상단) */
-      position: fixed !important;
-      top: 50%;
+      flex-direction: column; /* 세로 방향으로 기본 배치 (변경) */
+      align-items: flex-start; /* 왼쪽 정렬 */
+      position: fixed;
+      top: 20%;
       left: 50%;
-      transform: translate(-50%, -50%) !important; /* 중앙 정렬 유지 */
+      transform: translateX(-50%);
       background: white;
-      padding: 20px;
+      padding: 10px;
       border-radius: 10px;
-      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
       z-index: 1000;
-      width: 80%;
+      width: 90%;
       max-width: 600px;
       height: auto;
-      max-height: 80%;
-      overflow: auto;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-sizing: border-box;
+      margin: 0;
     }
-
-    /* 추가: 모달이 활성화되었을 때 표시하기 위한 스타일 */
+  
     .card-info-modal.active {
         display: flex;
-        /* 변경: Flexbox로 표시 (기존 display: block; 대신) */
-        flex-direction: row;
-        /* 변경: 가로로 표시 */
+        flex-direction: row; /* 가로 방향으로 변경 (복원) */
         align-items: flex-start;
-        /* 재확인: 세로 정렬 */
         justify-content: flex-start;
-        /*재확인: 가로 정렬 */
     }
-
+    
     .modal-content {
-      display: flex !important; /* 명시적으로 Flexbox 사용 */
-      flex-direction: row !important; /* 가로 방향 배치 */
-      align-items: flex-start !important; /* 세로 방향 정렬 (위쪽 기준) */
-      justify-content: flex-start !important; /* 가로 방향 정렬 (왼쪽부터) */
-      width: 100%;
-      height: auto;
-      overflow: auto;
+        display: flex;
+        flex-direction: row; /* 가로 방향으로 변경 (복원) */
+        align-items: flex-start;
+        justify-content: flex-start;
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+        margin: 0;
     }
-
+    
     #modal-info {
-      flex: 1;
-      display: flex !important; /* 명시적으로 Flexbox 사용 */
-      flex-direction: column !important; /* 세로 방향 정렬 */
-      align-items: flex-start !important; /* 가로 방향 정렬 (왼쪽부터) */
-      justify-content: flex-start !important; /* 세로 방향 정렬 (위쪽부터) */
-      margin-left: 10px;
+        flex: 1; /* flex:1로 변경 */
+        display: flex;
+        flex-direction: column; /* 세로 방향으로 유지 */
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
     }
-
+    
+    #modal-info pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        font-size: 0.8em;
+        padding: 0;
+        margin: 0;
+    }
+    
     #modal-info h2 {
-      margin-top: 0.5em;   /* 이전 값보다 작게 조절 */
-      margin-bottom: 0.5em; /* 이전 값보다 작게 조절 */
+        font-size: 2em;
+        margin-top: 0.2em; /* 여백 줄임 */
+        margin-bottom: 0.2em;
+        padding: 0;
+        margin: 0;
     }
     
     #modal-info p {
-        margin-top: 0.25em;  /* 더욱 작게 조절 */
-        margin-bottom: 0.25em;
+        font-size: 1.2em;
+        margin-top: 0.1em;
+        margin-bottom: 0.1em;
+        padding: 0;
+        margin: 0;
     }
 
     #modal-info pre {
-      margin-top: 0.25em;
-      margin-bottom: 0.25em;
-    }
-
+      font-size: 1.5em;
+      padding: 0;
+      margin: 0;
+  }
+    
     .card-info-modal img {
-      width: auto;
-      max-width: 40%;      /* 이미지 최대 너비를 50%로 제한 */
-      height: auto;
-      max-height: 80%;     /* 이미지 최대 높이를 80%로 제한 */
-      margin-right: 15px;   /* 정보와의 간격 유지 */
-      object-fit: contain;  /* 이미지 비율 유지 */
-      flex-shrink: 0;       /* 이미지가 줄어들지 않도록 설정 */
-      align-self: center;
-      margin-right: 10px;
+        max-width: 40%; /* 이미지 최대 너비 */
+        height: auto;
+        object-fit: contain;
+        margin: 0.5em 0.5em 0.5em auto; /* 변경: 간격 및 정렬 */
+        display: block;
+        align-self: center;
     }
 
     .card-info-modal .close-button {
@@ -290,8 +303,8 @@
         top: 50%;      /* 모바일에서 위에서 50% 위치 */
         left: 50%;     /* 모바일에서 가로 중앙 */
         transform: translateX(-50%); /* 모바일에서 가로 중앙 맞춤 */
-        flex-direction: column !important; /* 세로로 배치 */
-        align-items: center !important; /* 가로 중앙 정렬 */
+        flex-direction: column; /* 세로로 배치 */
+        align-items: center; /* 가로 중앙 정렬 */
         padding: 10px;
         height: auto;       /* 높이 자동 조절 */
         max-height: 95%;   /* 최대 높이 (선택 사항) */
@@ -299,9 +312,9 @@
       }
   
       .modal-content {
-          flex-direction: column !important; /* 모바일: 세로로 변경 */
-          align-items: center !important;    /* 모바일: 중앙 정렬 */
-          justify-content: flex-start !important; /* 모바일: 위에서 시작 */
+          flex-direction: column; /* 모바일: 세로로 변경 */
+          align-items: center;    /* 모바일: 중앙 정렬 */
+          justify-content: flex-start; /* 모바일: 위에서 시작 */
       }
   
       .card-info-modal img {
@@ -310,14 +323,14 @@
           margin-left: 0;
           margin-top: 10px;
           margin-bottom: 10px;
-          align-self: center !important; /* 모바일: 이미지 가운데 정렬 */
+          align-self: center; /* 모바일: 이미지 가운데 정렬 */
       }
   
       #modal-info {
           width: 100%;       /* 모바일: 모달 너비 채우기 */
           padding-left: 0;    /* 모바일: 좌우 패딩 제거 */
           padding-right: 0;
-          order: 1 !important;        /* 모바일: 카드 정보 아래로 */
+          order: 1;        /* 모바일: 카드 정보 아래로 */
           margin-top: 10px;    /* 모바일: 이미지와의 간격 */
       }
   
