@@ -138,7 +138,10 @@
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
       z-index: 1000;
       width: 80%;
-      max-width: 600px;
+      max-width: 90%; /* 화면 너비의 90% 이하 */
+      max-height: 90%; /* 화면 높이의 90% 이하 */
+      width: auto;
+      height: auto;
       overflow: auto;
     }
 
@@ -170,7 +173,7 @@
       font-size: 20px;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 768px) and (max-width: 1024px) {
       .tabs {
         flex-wrap: wrap;
         overflow-x: auto;
@@ -209,9 +212,25 @@
         padding: 15px;
       }
     
+      .card-info-modal {
+        max-width: 80%; /* 태블릿에서 모달 창 너비 조절 */
+        max-height: 80%; /* 태블릿에서 모달 창 높이 조절 */
+        padding: 15px; /* 내부 여백 증가 */
+      }
+
+      .card-info-modal h2 {
+          font-size: 1.8em; /* 폰트 크기 증가 */
+      }
+      
+      .card-info-modal p,
+      .card-info-modal pre {
+          font-size: 1.1em; /* 폰트 크기 증가 */
+      }
+
       body {
         padding: 10px;
       }
+      
     }
     :root {
       --color-red: red;
