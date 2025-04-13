@@ -127,27 +127,50 @@
       box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
     }
     .card-info-modal {
-      display: none;
+      display: none;        /* 초기 상태 숨김 */
+      flex-direction: column; /* 세로 방향으로 기본 배치 */
+      align-items: center;    /* 가로축 가운데 정렬 */
       position: fixed;
-      top: 10px;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%); /* 화면 중앙에 위치 */
       background: white;
       padding: 20px;
       border-radius: 10px;
       box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
       z-index: 1000;
-      width: 80%;
-      max-width: 90%; /* 화면 너비의 90% 이하 */
-      max-height: 90%; /* 화면 높이의 90% 이하 */
-      width: auto;
+      width: 80%;           /* 모달 너비 */
+      max-width: 600px;    /* 최대 너비 */
+      height: auto;
+      max-height: 80%;    /* 최대 높이 */
+      overflow: auto;      /* 내용이 넘치면 스크롤 */
+    }
+  
+    /* 추가: 모달이 활성화되었을 때 표시하기 위한 스타일 */
+    .card-info-modal.active {
+        display: flex;       /* 변경: Flexbox로 표시 (기존 display: block; 대신) */
+        flex-direction: column; /* 재확인: 세로 방향으로 배치 */
+        align-items: center;    /* 재확인: 가로축 가운데 정렬 */
+        justify-content: flex-start; /* 새로 추가: 세로축 시작점에 정렬 */
+    }
+
+    .modal-content {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start; /* 기존 스타일: 위쪽 정렬 */
+      justify-content: flex-start; /* 기존 스타일: 왼쪽부터 정렬 */
+      align-items: center;    /* 변경: 세로 방향 중앙 정렬 */
+      width: 100%;
       height: auto;
       overflow: auto;
     }
 
     #modal-info {
-      word-wrap: break-word;
-      overflow-wrap: break-word;
+      flex: 1;           /* 추가: 남은 공간 차지 */
+      display: flex;       /* 추가: Flexbox 내부 요소 정렬 */
+      flex-direction: column; /* 추가: 세로 방향 정렬 */
+      align-items: flex-start; /* 추가: 가로축 왼쪽 정렬 */
+      justify-content: flex-start; /* 추가: 세로축 위쪽 정렬 */
     }
   
     #modal-info pre {
@@ -159,12 +182,17 @@
     .card-info-modal.active {
       display: block;
     }
+
     .card-info-modal img {
-      width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      margin-bottom: 10px;
+      width: auto;
+      max-width: 40%;  /* 카드 이미지 최대 너비 */
+      height: auto;
+      max-height: 100%;
+      margin-right: 15px; /* 정보와의 간격 */
+      object-fit: contain; /* 이미지 비율 유지 */
+      flex-shrink: 0;   /* 이미지 축소 안 함 */
     }
+
     .card-info-modal .close-button {
       position: absolute;
       top: 10px;
@@ -213,9 +241,21 @@
       }
     
       .card-info-modal {
-        max-width: 80%; /* 태블릿에서 모달 창 너비 조절 */
-        max-height: 80%; /* 태블릿에서 모달 창 높이 조절 */
-        padding: 15px; /* 내부 여백 증가 */
+        width: 90%; /* 모바일에서는 더 넓게 */
+        flex-direction: column; /* 세로 방향으로 배치 */
+        align-items: center; /* 가운데 정렬 */
+        padding: 10px;
+      }
+
+      .modal-content {
+        flex-direction: column; /* 모바일에서 세로로 쌓기 */
+        align-items: center;    /* 모바일에서 이미지 가운데 정렬 */
+      }
+
+      .card-info-modal img {
+        max-width: 80%; /* 모바일에서는 이미지 너비 확대 */
+        margin-right: 0;
+        margin-bottom: 10px;
       }
 
       .card-info-modal h2 {
@@ -476,53 +516,83 @@
 
   const modal = document.querySelector('.card-info-modal'); // 모달 요소
   let modalClickListener = null; // 이벤트 리스너 저장 변수
-  
-  function showCardInfoModal(card) {
-    document.getElementById('modal-image').src = card.image_url;
+  let isModalOpen = false; // 모달 열림 여부
 
-    // 카드 이름 색상 적용
+  function showCardInfoModal(card) {
+    if (!card) {
+      console.warn("showCardInfoModal이 유효하지 않은 card 객체로 호출되었습니다.");
+      return; // 유효하지 않은 card 객체면 중단
+    }
+
+    if (isModalOpen) {
+      console.warn("showCardInfoModal이 이미 열린 상태에서 호출되었습니다.");
+      return; // 이미 열려있으면 중복 호출 방지
+    }
+
+    // 모달 내용 초기화
+    modal.innerHTML = '';
+
+    // 새로운 내용 컨테이너 생성
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+
+    // 이미지 표시
+    const img = document.createElement('img');
+    img.src = card.image_url;
+    img.alt = card.name;
+    modalContent.appendChild(img);
+
+    // 텍스트 정보 표시
     const colorVariable = getColorVariable(card.color);
     const nameElement = document.createElement('h2');
     nameElement.textContent = card.name;
     nameElement.style.color = colorVariable;
 
-    document.getElementById('modal-info').innerHTML = ''; // 기존 내용 초기화
-    document.getElementById('modal-info').appendChild(nameElement);
-
-    // 나머지 카드 정보 표시
-    document.getElementById('modal-info').innerHTML += `
-        <p><strong>레벨:</strong> ${card.level}</p>
-        <p><strong>코스트:</strong> ${card.cost}</p>
-        <p><strong>파워:</strong> ${card.power}</p>
-        <p><strong>소울:</strong> ${card.soul}</p>
-        <p><strong>색상:</strong> ${card.color}</p>
-        <p><strong>특징:</strong> ${card.traits}</p>
-        <p><strong>효과:</strong></p>
-        <pre>${card.effect}</pre>
+    const infoElement = document.createElement('div');
+    infoElement.id = 'modal-info'; // 기존 id 유지
+    infoElement.appendChild(nameElement);
+    infoElement.innerHTML += `
+      <p><strong>레벨:</strong> ${card.level}</p>
+      <p><strong>코스트:</strong> ${card.cost}</p>
+      <p><strong>파워:</strong> ${card.power}</p>
+      <p><strong>소울:</strong> ${card.soul}</p>
+      <p><strong>색상:</strong> ${card.color}</p>
+      <p><strong>특징:</strong> ${card.traits}</p>
+      <p><strong>효과:</strong></p>
+      <pre>${card.effect}</pre>
     `;
+    modalContent.appendChild(infoElement);
 
+    // 모달에 내용 추가
+    modal.appendChild(modalContent);
+
+    // 모달 표시
     modal.classList.add('active');
+    isModalOpen = true; // 모달 열림 표시
     document.body.style.overflow = 'hidden';
 
-     // document에 클릭/터치 이벤트 리스너 추가
-     modalClickListener = (event) => {
-      if (!event.target.closest('.card-info-modal')) { // 모달 내부 클릭이 아니면 닫음
+    // 이벤트 리스너 설정 (1회만 설정되도록 수정)
+    if (!modalClickListener) {
+      modalClickListener = (event) => {
+        if (isModalOpen && !event.target.closest('.card-info-modal')) {
           closeCardInfoModal();
-      }
-    };
-    document.addEventListener('mousedown', modalClickListener); // 또는 'touchstart'
+        }
+      };
+      document.addEventListener('mousedown', modalClickListener);
+    }
   }
     
-    function closeCardInfoModal() {
-      modal.classList.remove('active');
-      document.body.style.overflow = 'auto';
+  function closeCardInfoModal() {
+    modal.classList.remove('active');
+    isModalOpen = false; // 모달 닫힘 표시
+    document.body.style.overflow = 'auto';
 
-      // 이벤트 리스너 제거
-      if (modalClickListener) {
-          document.removeEventListener('mousedown', modalClickListener); // 또는 'touchstart'
-          modalClickListener = null;
-      }
+    // 이벤트 리스너 제거
+    if (modalClickListener) {
+      document.removeEventListener('mousedown', modalClickListener);
+      modalClickListener = null;
     }
+  }
 
     async function deleteCard(id, btn) {
       if (!confirm("정말 이 카드를 삭제하시겠습니까?")) return;
