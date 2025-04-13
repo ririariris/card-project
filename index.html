@@ -207,10 +207,19 @@
       justify-content: flex-start !important; /* 세로 방향 정렬 (위쪽부터) */
     }
 
+    #modal-info h2 {
+      margin-top: 0.5em;   /* 이전 값보다 작게 조절 */
+      margin-bottom: 0.5em; /* 이전 값보다 작게 조절 */
+    }
+    
+    #modal-info p {
+        margin-top: 0.25em;  /* 더욱 작게 조절 */
+        margin-bottom: 0.25em;
+    }
+
     #modal-info pre {
-        white-space: pre-wrap;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
+      margin-top: 0.25em;
+      margin-bottom: 0.25em;
     }
 
     .card-info-modal img {
@@ -278,7 +287,7 @@
           top: 20%;        
           left: 50%;       
           transform: none; 
-      }
+        }
 
         .modal-content {
             flex-direction: column;
@@ -297,12 +306,16 @@
         .card-info-modal h2 {
             font-size: 1.8em;
             /* 폰트 크기 증가 */
+            margin-top: 0.5em;       /* 추가: 위쪽 여백 조절 */
+            margin-bottom: 0.5em;    /* 추가: 아래쪽 여백 조절 */
         }
 
         .card-info-modal p,
         .card-info-modal pre {
             font-size: 1.1em;
             /* 폰트 크기 증가 */
+            margin-top: 0.25em;      /* 추가: 위쪽 여백 조절 */
+            margin-bottom: 0.25em;   /* 추가: 아래쪽 여백 조절 */
         }
 
         body {
