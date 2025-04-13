@@ -221,7 +221,7 @@
       .card-info-modal h2 {
           font-size: 1.8em; /* 폰트 크기 증가 */
       }
-      
+
       .card-info-modal p,
       .card-info-modal pre {
           font-size: 1.1em; /* 폰트 크기 증가 */
@@ -283,7 +283,6 @@
   </template>
 
   <div class="card-info-modal">
-      <span class="close-button" onclick="closeCardInfoModal()">&times;</span>
       <img id="modal-image" src="" alt="">
       <div id="modal-info"></div>
   </div>
@@ -474,6 +473,9 @@
         container.appendChild(img); 
     });
   }
+
+  const modal = document.querySelector('.card-info-modal'); // 모달 요소
+  let modalClickListener = null; // 이벤트 리스너 저장 변수
   
   function showCardInfoModal(card) {
     document.getElementById('modal-image').src = card.image_url;
@@ -499,11 +501,27 @@
         <pre>${card.effect}</pre>
     `;
 
-    document.querySelector('.card-info-modal').classList.add('active');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+     // document에 클릭/터치 이벤트 리스너 추가
+     modalClickListener = (event) => {
+      if (!event.target.closest('.card-info-modal')) { // 모달 내부 클릭이 아니면 닫음
+          closeCardInfoModal();
+      }
+    };
+    document.addEventListener('mousedown', modalClickListener); // 또는 'touchstart'
   }
     
     function closeCardInfoModal() {
-      document.querySelector('.card-info-modal').classList.remove('active');
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+
+      // 이벤트 리스너 제거
+      if (modalClickListener) {
+          document.removeEventListener('mousedown', modalClickListener); // 또는 'touchstart'
+          modalClickListener = null;
+      }
     }
 
     async function deleteCard(id, btn) {
